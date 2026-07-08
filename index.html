@@ -6,7 +6,13 @@
     <title>Runlocal — the exact command to run your model locally</title>
     <meta
       name="description"
-      content="Pick your GPU, RAM, and model. Runlocal computes the offload split and hands you a ready-to-paste llama.cpp/Ollama launch command plus a tokens/sec estimate."
+      content="Pick your GPU, RAM, and model. Runlocal computes the offload split and hands you a ready-to-paste llama.cpp or Ollama launch command plus a tokens/sec estimate."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Runlocal — the exact command to run your model locally" />
+    <meta
+      property="og:description"
+      content="Tell Runlocal your GPU, RAM, and model. Get the exact llama.cpp or Ollama launch command, the GPU/CPU offload split, and an honest tokens/sec estimate."
     />
     <link
       rel="icon"
@@ -23,13 +29,80 @@
   </head>
   <body>
     <div class="app">
-      <h1 class="wordmark">Runlocal</h1>
+      <header class="app-header">
+        <h1 class="wordmark">Runlocal</h1>
+        <a class="gh-link" href="https://github.com/ctkrug/runlocal">View on GitHub ↗</a>
+      </header>
       <p class="tagline">
-        Your GPU, your RAM, your model — the exact launch command, not a guess.
+        Your GPU, your RAM, your model in. The exact llama.cpp or Ollama launch command out.
       </p>
       <main class="console" id="console">
         <p>Loading console…</p>
       </main>
+
+      <section class="info" aria-labelledby="info-heading">
+        <h2 id="info-heading">How Runlocal works</h2>
+        <p>
+          Runlocal turns your hardware and a target model into a command you can run. Pick your GPU
+          (or type in custom VRAM and memory bandwidth), set your system RAM, choose a model and a
+          quantization level, and it computes how much memory the weights and KV cache need, how
+          many transformer layers fit in VRAM, and how many spill to the CPU. The result is a
+          copy-paste <code>llama.cpp</code> or <code>Ollama</code> command with the right
+          <code>--n-gpu-layers</code> and context size, plus a tokens/sec estimate derived from
+          memory bandwidth.
+        </p>
+
+        <h3>Reading the offload split</h3>
+        <p>
+          Partial GPU offload is normal, not a failure. When a model does not fit entirely in VRAM,
+          Runlocal fills the GPU with as many layers as the KV cache and runtime overhead allow,
+          then runs the rest on the CPU. The offload bar shows that GPU/CPU split at a glance, and
+          the tokens/sec figure already accounts for the slower CPU path. If a model will not fit
+          even with system RAM added, Runlocal shows a warning instead of a command that would only
+          run out of memory.
+        </p>
+
+        <h3>Frequently asked questions</h3>
+        <dl class="faq">
+          <dt>How accurate is the tokens/sec estimate?</dt>
+          <dd>
+            It is a bandwidth-bound estimate, not a benchmark. Local decoding is dominated by
+            memory bandwidth, so Runlocal divides the bytes moved per token by your GPU and CPU
+            bandwidth, scaled by a real-world efficiency factor. Open the "why this estimate" panel
+            to see the exact formula and numbers. Real speed varies with your driver, batch size,
+            and CPU.
+          </dd>
+          <dt>Why does the model size differ from the file size on Hugging Face?</dt>
+          <dd>
+            Runlocal estimates weight size as parameters times bytes-per-parameter for the chosen
+            quant. GGUF files vary slightly because some tensors are stored at higher precision. The
+            estimate is close enough to decide fit and offload, not to predict the byte-exact
+            download.
+          </dd>
+          <dt>What does <code>--n-gpu-layers</code> do?</dt>
+          <dd>
+            It tells llama.cpp how many of the model's transformer layers to load onto the GPU; the
+            rest run on the CPU. Runlocal solves for the largest number that fits your VRAM after
+            reserving space for the KV cache and runtime overhead.
+          </dd>
+          <dt>Does it work for Apple Silicon?</dt>
+          <dd>
+            Yes. M1 Pro, M2 Max, and M4 Max are included with their unified memory and bandwidth. On
+            Apple Silicon the "VRAM" is shared system memory, so the fit math uses the unified
+            memory figure.
+          </dd>
+          <dt>Do you store my hardware or send it anywhere?</dt>
+          <dd>
+            No. Runlocal is a static page with no backend. Every calculation runs in your browser and
+            nothing is sent to a server.
+          </dd>
+        </dl>
+      </section>
+
+      <footer class="app-footer">
+        <a href="https://github.com/ctkrug/runlocal">Source on GitHub</a>
+        <a href="https://apps.charliekrug.com">More by Charlie Krug ↗</a>
+      </footer>
     </div>
     <script type="module" src="./src/main.js"></script>
   </body>

@@ -64,12 +64,40 @@ a {
   padding: var(--space-5) var(--space-4);
 }
 
+.app-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-1);
+}
+
 .wordmark {
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  margin: 0 0 var(--space-1);
+  margin: 0;
+}
+
+.gh-link {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-3);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.gh-link:hover,
+.gh-link:focus-visible {
+  border-color: var(--accent);
+  outline: none;
 }
 
 .tagline {
@@ -389,12 +417,82 @@ button.copy-failed {
   position: absolute;
   bottom: var(--space-2);
   right: var(--space-2);
+  font-family: var(--font-display);
   font-size: 0.65rem;
   color: var(--text-muted);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.2em;
   border: 1px solid var(--surface-2);
   border-radius: var(--radius);
   padding: 2px 6px;
+}
+
+.info {
+  margin-top: var(--space-6);
+  max-width: 70ch;
+  color: var(--text);
+}
+
+.info h2 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  margin: 0 0 var(--space-3);
+}
+
+.info h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: var(--space-5) 0 var(--space-2);
+}
+
+.info p,
+.faq dd {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.info code {
+  color: var(--accent);
+  background-color: var(--surface-1);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 0.85em;
+}
+
+.faq {
+  margin: 0;
+}
+
+.faq dt {
+  color: var(--text);
+  font-weight: 500;
+  margin-top: var(--space-4);
+}
+
+.faq dd {
+  margin: var(--space-1) 0 0;
+}
+
+.app-footer {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-top: var(--space-6);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--surface-2);
+  font-size: 0.8rem;
+}
+
+.app-footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.app-footer a:hover,
+.app-footer a:focus-visible {
+  color: var(--accent);
+  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

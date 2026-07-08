@@ -61,12 +61,12 @@ criteria — no vibes. The first story of Epic 1 is the wow moment; nothing else
 
 ## Epic 4 — Quality & trust
 
-- [ ] **Unit tests for memory math**
+- [x] **Unit tests for memory math**
   - Vitest suite covers at least 5 distinct quant/model combinations with asserted expected
     `gpuLayers` values and confirms `tokPerSec` is always a finite positive number.
-- [ ] **"Why this estimate" methodology panel**
+- [x] **"Why this estimate" methodology panel**
   - An expandable panel shows the formula and the specific input values used to produce the
     current command and tok/s number.
-- [ ] **Accuracy disclaimer**
+- [x] **Accuracy disclaimer**
   - The UI states, in visible text (not just a tooltip), that tok/s is a bandwidth-bound estimate
     and links to the methodology panel above.

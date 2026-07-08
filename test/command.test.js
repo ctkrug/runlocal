@@ -18,6 +18,20 @@ describe("buildLlamaCppCommand", () => {
   });
 });
 
+describe("buildLlamaCppCommand — zero gpu-layers boundary", () => {
+  it("still emits a valid flag when fully CPU-offloaded", () => {
+    const command = buildLlamaCppCommand({
+      model: getModelById("llama-3-70b"),
+      quant: getQuantById("f16"),
+      contextTokens: 4096,
+      gpuLayers: 0,
+    });
+
+    expect(command).toContain("--n-gpu-layers 0");
+    expect(command.trimEnd().endsWith("\\")).toBe(false);
+  });
+});
+
 describe("buildOllamaCommand", () => {
   it("preserves the solved gpu-layers and context as env vars", () => {
     const command = buildOllamaCommand({

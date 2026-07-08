@@ -37,4 +37,18 @@ describe("parseClampedNumber", () => {
   it("rounds a clamped negative value when round is set", () => {
     expect(parseClampedNumber("-0.4", { fallback: 4096, min: 0, round: true })).toBe(0);
   });
+
+  it("clamps an absurdly large value to max instead of overflowing to scientific notation", () => {
+    const result = parseClampedNumber("99999999999999999999999", {
+      fallback: 4096,
+      min: 0,
+      max: 10_000_000,
+    });
+    expect(result).toBe(10_000_000);
+    expect(result.toString()).not.toContain("e+");
+  });
+
+  it("leaves values unbounded when max is omitted", () => {
+    expect(parseClampedNumber("5000", { fallback: 0, min: 0 })).toBe(5000);
+  });
 });

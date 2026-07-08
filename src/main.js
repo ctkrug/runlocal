@@ -15,6 +15,14 @@ const DEFAULT_CUSTOM_BANDWIDTH_GBS = 400;
 const TYPE_REVEAL_MS = 24;
 const LIVE_INPUT_DEBOUNCE_MS = 200;
 
+// Generous upper bounds — far beyond any real model/hardware today — that
+// exist only to stop absurd input (e.g. a pasted 1e23) from rendering in
+// scientific notation in the emitted command or warning text.
+const MAX_CONTEXT_TOKENS = 10_000_000;
+const MAX_RAM_GB = 1_000_000;
+const MAX_CUSTOM_VRAM_GB = 1_000_000;
+const MAX_CUSTOM_BANDWIDTH_GBS = 1_000_000;
+
 function optionsHtml(items) {
   return items.map((item) => `<option value="${item.id}">${item.label}</option>`).join("");
 }
@@ -122,11 +130,14 @@ function resolveGpu(root) {
   const gpuId = root.querySelector("#gpu").value;
   if (gpuId !== CUSTOM_GPU_ID) return getGpuById(gpuId);
 
-  const vramGb = readNumber(root.querySelector("#custom-vram"), DEFAULT_CUSTOM_VRAM_GB, 1);
+  const vramGb = readNumber(root.querySelector("#custom-vram"), DEFAULT_CUSTOM_VRAM_GB, 1, {
+    max: MAX_CUSTOM_VRAM_GB,
+  });
   const bandwidthGBs = readNumber(
     root.querySelector("#custom-bandwidth"),
     DEFAULT_CUSTOM_BANDWIDTH_GBS,
-    1
+    1,
+    { max: MAX_CUSTOM_BANDWIDTH_GBS }
   );
   return { id: CUSTOM_GPU_ID, label: "Custom hardware", vramGb, bandwidthGBs };
 }
@@ -137,8 +148,9 @@ function update(root) {
   const quant = getQuantById(root.querySelector("#quant").value);
   const contextTokens = readNumber(root.querySelector("#ctx"), DEFAULT_CONTEXT_TOKENS, 0, {
     round: true,
+    max: MAX_CONTEXT_TOKENS,
   });
-  const systemRamGb = readNumber(root.querySelector("#ram"), 0, 0);
+  const systemRamGb = readNumber(root.querySelector("#ram"), 0, 0, { max: MAX_RAM_GB });
 
   const result = solve({ gpu, model, quant, contextTokens, systemRamGb });
   const buildCommand =

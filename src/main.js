@@ -2,7 +2,9 @@ import { GPUS, getGpuById } from "./data/hardware.js";
 import { MODELS, getModelById } from "./data/models.js";
 import { QUANTS, getQuantById } from "./data/quant.js";
 import { solve } from "./core/solver.js";
-import { buildLlamaCppCommand } from "./core/command.js";
+import { buildLlamaCppCommand, buildOllamaCommand } from "./core/command.js";
+
+const BACKENDS = { LLAMA_CPP: "llama.cpp", OLLAMA: "ollama" };
 
 const DEFAULT_CONTEXT_TOKENS = 4096;
 const DEFAULT_SYSTEM_RAM_GB = 32;
@@ -37,8 +39,25 @@ function render(root) {
       </div>
     </section>
     <section class="panel panel--active" aria-label="Launch command and estimate">
+      <div class="backend-toggle" role="radiogroup" aria-label="Command backend">
+        <button
+          type="button"
+          class="backend-toggle__option is-active"
+          id="backend-llamacpp"
+          role="radio"
+          aria-checked="true"
+        >llama.cpp</button>
+        <button
+          type="button"
+          class="backend-toggle__option"
+          id="backend-ollama"
+          role="radio"
+          aria-checked="false"
+        >Ollama</button>
+      </div>
       <div class="command-output" id="command" role="status"></div>
       <button id="copy" type="button">Copy command</button>
+      <div class="warning" id="warning" role="alert" hidden></div>
       <div class="offload-bar" id="offload-bar" aria-hidden="true"></div>
       <div class="readout" id="readout"></div>
       <div class="spec-plate">RUNLOCAL⌐¬</div>
@@ -64,6 +83,8 @@ function typeCommand(el, text) {
   step();
 }
 
+const state = { backend: BACKENDS.LLAMA_CPP };
+
 function update(root) {
   const gpu = getGpuById(root.querySelector("#gpu").value);
   const model = getModelById(root.querySelector("#model").value);
@@ -72,7 +93,9 @@ function update(root) {
   const systemRamGb = Number(root.querySelector("#ram").value) || 0;
 
   const result = solve({ gpu, model, quant, contextTokens, systemRamGb });
-  const command = buildLlamaCppCommand({
+  const buildCommand =
+    state.backend === BACKENDS.OLLAMA ? buildOllamaCommand : buildLlamaCppCommand;
+  const command = buildCommand({
     model,
     quant,
     contextTokens,
@@ -80,6 +103,18 @@ function update(root) {
   });
 
   typeCommand(root.querySelector("#command"), command);
+
+  const warning = root.querySelector("#warning");
+  if (result.fitsAtAll) {
+    warning.hidden = true;
+    warning.textContent = "";
+  } else {
+    warning.hidden = false;
+    warning.textContent =
+      `⚠ ${model.label} (${quant.label}) needs more memory than ${gpu.label} VRAM ` +
+      `plus your ${systemRamGb}GB system RAM can provide. Pick a smaller quant, a ` +
+      "shorter context, or more RAM before running this command.";
+  }
 
   const bar = root.querySelector("#offload-bar");
   const gpuPct = (result.gpuLayers / result.totalLayers) * 100;
@@ -113,6 +148,21 @@ function init() {
 
   root.querySelectorAll("select, input").forEach((el) => {
     el.addEventListener("change", () => update(root));
+  });
+
+  const backendButtons = [
+    { el: root.querySelector("#backend-llamacpp"), backend: BACKENDS.LLAMA_CPP },
+    { el: root.querySelector("#backend-ollama"), backend: BACKENDS.OLLAMA },
+  ];
+  backendButtons.forEach(({ el, backend }) => {
+    el.addEventListener("click", () => {
+      state.backend = backend;
+      backendButtons.forEach(({ el: other, backend: otherBackend }) => {
+        other.classList.toggle("is-active", otherBackend === backend);
+        other.setAttribute("aria-checked", String(otherBackend === backend));
+      });
+      update(root);
+    });
   });
 
   root.querySelector("#copy").addEventListener("click", () => {

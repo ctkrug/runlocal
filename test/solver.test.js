@@ -68,6 +68,26 @@ describe("solve", () => {
   });
 });
 
+describe("solve — fitsAtAll exact-equality boundary", () => {
+  it("fits when combined VRAM + system RAM exactly equals the bytes needed", () => {
+    const gpu = { id: "boundary-gpu", label: "Boundary GPU", vramGb: 1, bandwidthGBs: 100 };
+    const model = {
+      id: "boundary-model",
+      label: "Boundary Model",
+      paramsBillion: 1,
+      layers: 1,
+      hiddenSize: 1,
+    };
+    const quant = { id: "boundary-quant", label: "BQ", bytesPerParam: 1 };
+
+    // modelBytes = 1GB, kvCacheBytes = 0 (contextTokens: 0), overhead = 0.5GB
+    // => totalNeededBytes = 1.5GB, exactly matching vramGb(1) + systemRamGb(0.5).
+    const result = solve({ gpu, model, quant, contextTokens: 0, systemRamGb: 0.5 });
+
+    expect(result.fitsAtAll).toBe(true);
+  });
+});
+
 describe("estimateModelSizeBytes / estimateKvCacheBytes — boundaries", () => {
   it("returns zero KV cache bytes for a zero-token context", () => {
     const model = getModelById("llama-3-8b");

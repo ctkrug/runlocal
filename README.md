@@ -23,12 +23,16 @@ the correct `--n-gpu-layers`, context size, and quant pick — plus a **~38 tok/
 
 ## How it works
 
-1. Pick your GPU (or enter custom VRAM/bandwidth) and system RAM.
-2. Pick the model and a quantization level (Q4_K_M, Q5_K_M, Q8_0, F16).
+1. Pick your GPU — 12 presets spanning NVIDIA consumer, NVIDIA datacenter, and Apple Silicon, or
+   enter custom VRAM/bandwidth — and your system RAM.
+2. Pick the model (8 options across Llama, Mistral, Qwen, and Phi) and a quantization level
+   (Q4_K_M, Q5_K_M, Q8_0, F16).
 3. Runlocal solves the offload split: how many transformer layers fit in VRAM given the model's
    per-layer size and the KV cache your context length demands.
-4. It emits the exact `llama.cpp` / `Ollama` command and an estimated tokens/sec derived from
-   memory bandwidth and the GPU/CPU offload ratio.
+4. It emits the exact `llama.cpp` or `Ollama` command (toggle between the two) and an estimated
+   tokens/sec derived from memory bandwidth and the GPU/CPU offload ratio. A won't-fit
+   combination shows a warning instead of a misleadingly valid command, and the "why this
+   estimate" panel shows the exact formula and numbers behind it.
 
 ## Stack
 
@@ -49,8 +53,9 @@ npm run build    # production build to dist/
 
 ## Status
 
-Early scope/build phase — see [`docs/VISION.md`](docs/VISION.md) for the full plan and
-[`docs/BACKLOG.md`](docs/BACKLOG.md) for the story breakdown.
+Core feature set complete — see [`docs/VISION.md`](docs/VISION.md) for the full plan,
+[`docs/BACKLOG.md`](docs/BACKLOG.md) for the story breakdown, and
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the module map.
 
 ## License
 

@@ -36,19 +36,34 @@ function render(root) {
       </div>
       <div class="field custom-fields" id="custom-fields" hidden>
         <label for="custom-vram">Custom VRAM (GB) →</label>
-        <input id="custom-vram" type="number" min="1" step="1" value="${DEFAULT_CUSTOM_VRAM_GB}" />
+        <input
+          id="custom-vram"
+          type="number"
+          min="1"
+          max="${MAX_CUSTOM_VRAM_GB}"
+          step="1"
+          value="${DEFAULT_CUSTOM_VRAM_GB}"
+        />
         <label for="custom-bandwidth">Custom bandwidth (GB/s) →</label>
         <input
           id="custom-bandwidth"
           type="number"
           min="1"
+          max="${MAX_CUSTOM_BANDWIDTH_GBS}"
           step="1"
           value="${DEFAULT_CUSTOM_BANDWIDTH_GBS}"
         />
       </div>
       <div class="field">
         <label for="ram">System RAM (GB) →</label>
-        <input id="ram" type="number" min="0" step="1" value="${DEFAULT_SYSTEM_RAM_GB}" />
+        <input
+          id="ram"
+          type="number"
+          min="0"
+          max="${MAX_RAM_GB}"
+          step="1"
+          value="${DEFAULT_SYSTEM_RAM_GB}"
+        />
       </div>
       <div class="field">
         <label for="model">Model →</label>
@@ -60,7 +75,14 @@ function render(root) {
       </div>
       <div class="field">
         <label for="ctx">Context (tokens) →</label>
-        <input id="ctx" type="number" min="256" step="256" value="${DEFAULT_CONTEXT_TOKENS}" />
+        <input
+          id="ctx"
+          type="number"
+          min="256"
+          max="${MAX_CONTEXT_TOKENS}"
+          step="256"
+          value="${DEFAULT_CONTEXT_TOKENS}"
+        />
       </div>
     </section>
     <section class="panel panel--active" aria-label="Launch command and estimate">

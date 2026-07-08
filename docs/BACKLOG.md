@@ -5,25 +5,25 @@ criteria — no vibes. The first story of Epic 1 is the wow moment; nothing else
 
 ## Epic 1 — Core memory solver (the wow moment)
 
-- [ ] **Hardware + model DB seeded with real specs**
+- [x] **Hardware + model DB seeded with real specs**
   - RTX 3060 12GB and Llama-3-8B are both selectable in their respective dropdowns.
   - Selecting that pair produces a non-empty launch command and a numeric tok/s estimate greater
     than zero.
-- [ ] **Quant-aware memory math**
+- [x] **Quant-aware memory math**
   - Switching quant level (Q4_K_M/Q5_K_M/Q8_0/F16) for the same model changes the displayed
     model size estimate.
   - Increasing context length increases the KV cache size estimate, all else held equal.
-- [ ] **GPU-layer offload solver**
+- [x] **GPU-layer offload solver**
   - For a model+VRAM combination that fits entirely, `gpuLayers` equals the model's total layer
     count.
   - For a combination that doesn't fully fit, `gpuLayers` is strictly less than the total layer
     count and greater than zero when partial offload is possible.
-- [ ] **Tokens/sec estimator from bandwidth + offload ratio**
+- [x] **Tokens/sec estimator from bandwidth + offload ratio**
   - For the same model on the same GPU, a fully-offloaded configuration estimates a higher tok/s
     than a partially-offloaded one.
   - The estimate is a finite positive number for every supported GPU/model/quant combination in
     the seeded databases.
-- [ ] **Design polish — blueprint console**
+- [x] **Design polish — blueprint console**
   - Page uses Space Grotesk (display) and JetBrains Mono (UI/mono) per `docs/DESIGN.md`.
   - The blueprint grid background, panel glow, and corner spec-plate signature detail are present
     and match the token values in `docs/DESIGN.md`.

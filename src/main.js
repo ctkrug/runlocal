@@ -228,14 +228,30 @@ function init() {
   root.querySelector("#copy").addEventListener("click", () => {
     const text = root.querySelector("#command").textContent.replace(/▌$/, "");
     const button = root.querySelector("#copy");
-    navigator.clipboard?.writeText(text).then(() => {
-      button.classList.add("copied");
-      button.textContent = "Copied";
-      setTimeout(() => {
-        button.classList.remove("copied");
-        button.textContent = "Copy command";
-      }, 2000);
-    });
+    const resetButton = () => {
+      button.classList.remove("copied", "copy-failed");
+      button.textContent = "Copy command";
+    };
+
+    if (!navigator.clipboard) {
+      button.classList.add("copy-failed");
+      button.textContent = "Copy unsupported";
+      setTimeout(resetButton, 2000);
+      return;
+    }
+
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        button.classList.add("copied");
+        button.textContent = "Copied";
+        setTimeout(resetButton, 2000);
+      })
+      .catch(() => {
+        button.classList.add("copy-failed");
+        button.textContent = "Copy failed";
+        setTimeout(resetButton, 2000);
+      });
   });
 
   update(root);

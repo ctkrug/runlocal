@@ -98,6 +98,30 @@ a {
   position: relative;
 }
 
+/* Schematic crosshair corner marks — the recurring "this is a blueprint" cue. */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+  --corner-size: 12px;
+  --corner-thickness: 2px;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent));
+  background-size: var(--corner-size) var(--corner-thickness),
+    var(--corner-thickness) var(--corner-size), var(--corner-size) var(--corner-thickness),
+    var(--corner-thickness) var(--corner-size), var(--corner-size) var(--corner-thickness),
+    var(--corner-thickness) var(--corner-size), var(--corner-size) var(--corner-thickness),
+    var(--corner-thickness) var(--corner-size);
+  background-position: top left, top left, top right, top right, bottom left, bottom left,
+    bottom right, bottom right;
+}
+
 .panel--active {
   box-shadow: 0 0 24px rgba(87, 217, 255, 0.15);
   border-color: var(--accent);

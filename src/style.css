@@ -153,10 +153,6 @@ a {
   margin-bottom: var(--space-1);
 }
 
-.field label::before {
-  content: "";
-}
-
 select,
 input {
   width: 100%;

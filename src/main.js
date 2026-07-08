@@ -133,7 +133,7 @@ function typeCommand(el, text) {
   step();
 }
 
-const state = { backend: BACKENDS.LLAMA_CPP };
+const state = { backend: BACKENDS.LLAMA_CPP, currentCommand: "" };
 
 function readNumber(el, fallback, min, opts = {}) {
   return parseClampedNumber(el.value, { fallback, min, ...opts });
@@ -175,6 +175,7 @@ function update(root) {
     gpuLayers: result.gpuLayers,
   });
 
+  state.currentCommand = command;
   typeCommand(root.querySelector("#command"), command);
 
   const warning = root.querySelector("#warning");
@@ -274,7 +275,7 @@ function init() {
   });
 
   root.querySelector("#copy").addEventListener("click", () => {
-    const text = root.querySelector("#command").textContent.replace(/▌$/, "");
+    const text = state.currentCommand;
     const button = root.querySelector("#copy");
     const resetButton = () => {
       button.classList.remove("copied", "copy-failed");

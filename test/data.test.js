@@ -37,4 +37,14 @@ describe("data coverage", () => {
   it("covers all four supported quant levels", () => {
     expect(Object.keys(QUANTS).sort()).toEqual(["f16", "q4_k_m", "q5_k_m", "q8_0"]);
   });
+
+  it("has unique GPU ids — a duplicate would make one option unreachable", () => {
+    const ids = GPUS.map((gpu) => gpu.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("has unique model ids — a duplicate would make one option unreachable", () => {
+    const ids = MODELS.map((model) => model.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
 });

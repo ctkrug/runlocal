@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { solve, estimateModelSizeBytes, estimateKvCacheBytes } from "../src/core/solver.js";
+import {
+  solve,
+  estimateModelSizeBytes,
+  estimateKvCacheBytes,
+  estimateTokensPerSecond,
+} from "../src/core/solver.js";
 import { getGpuById } from "../src/data/hardware.js";
 import { getModelById } from "../src/data/models.js";
 import { getQuantById } from "../src/data/quant.js";
@@ -92,6 +97,20 @@ describe("solve — zero-VRAM boundary", () => {
     expect(result.fitsFully).toBe(false);
     expect(Number.isFinite(result.tokPerSec)).toBe(true);
     expect(result.tokPerSec).toBeGreaterThan(0);
+  });
+});
+
+describe("estimateTokensPerSecond — degenerate zero-layer guard", () => {
+  it("returns 0 instead of Infinity when there are no layers to move at all", () => {
+    const gpu = getGpuById("rtx-4090-24gb");
+    const tokPerSec = estimateTokensPerSecond({
+      gpu,
+      layerBytes: 1e9,
+      gpuLayers: 0,
+      cpuLayers: 0,
+    });
+
+    expect(tokPerSec).toBe(0);
   });
 });
 

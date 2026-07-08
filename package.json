@@ -10,6 +10,11 @@
     "type": "git",
     "url": "https://github.com/ctkrug/runlocal.git"
   },
+  "homepage": "https://github.com/ctkrug/runlocal#readme",
+  "bugs": {
+    "url": "https://github.com/ctkrug/runlocal/issues"
+  },
+  "keywords": ["llama.cpp", "ollama", "gguf", "gpu-offload", "local-llm"],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

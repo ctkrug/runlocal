@@ -63,6 +63,20 @@ describe("solve", () => {
   });
 });
 
+describe("estimateModelSizeBytes / estimateKvCacheBytes — boundaries", () => {
+  it("returns zero KV cache bytes for a zero-token context", () => {
+    const model = getModelById("llama-3-8b");
+    expect(estimateKvCacheBytes(model, 0)).toBe(0);
+  });
+
+  it("scales model size bytes linearly with bytes-per-param", () => {
+    const model = getModelById("llama-3-8b");
+    const q4 = estimateModelSizeBytes(model, getQuantById("q4_k_m"));
+    const f16 = estimateModelSizeBytes(model, getQuantById("f16"));
+    expect(f16).toBeCloseTo(q4 * (2.0 / 0.55), 5);
+  });
+});
+
 describe("solve — offload plans across quant/model combinations", () => {
   const contextTokens = 4096;
   const systemRamGb = 64;

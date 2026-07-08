@@ -1,5 +1,7 @@
 # Runlocal
 
+[![CI](https://github.com/ctkrug/runlocal/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/runlocal/actions/workflows/ci.yml)
+
 **Stop guessing whether a model fits your GPU. Get the exact launch command.**
 
 Runlocal takes your hardware (GPU + VRAM, system RAM) and the model you want to run, and

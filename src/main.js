@@ -113,13 +113,25 @@ function typeCommand(el, text) {
 
 const state = { backend: BACKENDS.LLAMA_CPP };
 
+// Number(el.value) is falsy for "", "0", and non-numeric text — fall back to a sane default
+// in that case, but clamp otherwise-truthy negative input (e.g. "-500") to `min` rather than
+// letting it flow into the memory math as a negative KV cache / VRAM figure.
+function readNumber(el, fallback, min) {
+  const raw = Number(el.value);
+  if (!raw) return fallback;
+  return Math.max(min, raw);
+}
+
 function resolveGpu(root) {
   const gpuId = root.querySelector("#gpu").value;
   if (gpuId !== CUSTOM_GPU_ID) return getGpuById(gpuId);
 
-  const vramGb = Number(root.querySelector("#custom-vram").value) || DEFAULT_CUSTOM_VRAM_GB;
-  const bandwidthGBs =
-    Number(root.querySelector("#custom-bandwidth").value) || DEFAULT_CUSTOM_BANDWIDTH_GBS;
+  const vramGb = readNumber(root.querySelector("#custom-vram"), DEFAULT_CUSTOM_VRAM_GB, 1);
+  const bandwidthGBs = readNumber(
+    root.querySelector("#custom-bandwidth"),
+    DEFAULT_CUSTOM_BANDWIDTH_GBS,
+    1
+  );
   return { id: CUSTOM_GPU_ID, label: "Custom hardware", vramGb, bandwidthGBs };
 }
 
@@ -127,8 +139,8 @@ function update(root) {
   const gpu = resolveGpu(root);
   const model = getModelById(root.querySelector("#model").value);
   const quant = getQuantById(root.querySelector("#quant").value);
-  const contextTokens = Number(root.querySelector("#ctx").value) || DEFAULT_CONTEXT_TOKENS;
-  const systemRamGb = Number(root.querySelector("#ram").value) || 0;
+  const contextTokens = readNumber(root.querySelector("#ctx"), DEFAULT_CONTEXT_TOKENS, 0);
+  const systemRamGb = readNumber(root.querySelector("#ram"), 0, 0);
 
   const result = solve({ gpu, model, quant, contextTokens, systemRamGb });
   const buildCommand =

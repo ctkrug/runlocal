@@ -115,7 +115,7 @@ function render(root) {
         <summary>Why this estimate?</summary>
         <div id="methodology-body"></div>
       </details>
-      <div class="spec-plate">RUNLOCAL⌐¬</div>
+      <div class="spec-plate" aria-hidden="true">RUNLOCAL⌐¬</div>
     </section>
   `;
 }

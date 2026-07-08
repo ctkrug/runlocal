@@ -207,9 +207,9 @@ function update(root) {
   } else {
     warning.hidden = false;
     warning.textContent =
-      `⚠ ${model.label} (${quant.label}) needs more memory than ${gpu.label} VRAM ` +
-      `plus your ${systemRamGb}GB system RAM can provide. Pick a smaller quant, a ` +
-      "shorter context, or more RAM before running this command.";
+      `⚠ ${model.label} (${quant.label}) needs more memory than ${gpu.label} ` +
+      `(${gpu.vramGb}GB VRAM) plus your ${systemRamGb}GB system RAM can provide. ` +
+      "Pick a smaller quant, a shorter context, or more RAM before running this command.";
   }
 
   const bar = root.querySelector("#offload-bar");

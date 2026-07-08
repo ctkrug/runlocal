@@ -5,9 +5,12 @@ import { solve } from "./core/solver.js";
 import { buildLlamaCppCommand, buildOllamaCommand } from "./core/command.js";
 
 const BACKENDS = { LLAMA_CPP: "llama.cpp", OLLAMA: "ollama" };
+const CUSTOM_GPU_ID = "custom";
 
 const DEFAULT_CONTEXT_TOKENS = 4096;
 const DEFAULT_SYSTEM_RAM_GB = 32;
+const DEFAULT_CUSTOM_VRAM_GB = 12;
+const DEFAULT_CUSTOM_BANDWIDTH_GBS = 400;
 const TYPE_REVEAL_MS = 24;
 
 function optionsHtml(items) {
@@ -19,7 +22,19 @@ function render(root) {
     <section class="panel" aria-label="Hardware and model selection">
       <div class="field">
         <label for="gpu">GPU →</label>
-        <select id="gpu">${optionsHtml(GPUS)}</select>
+        <select id="gpu">${optionsHtml(GPUS)}<option value="${CUSTOM_GPU_ID}">Custom hardware…</option></select>
+      </div>
+      <div class="field custom-fields" id="custom-fields" hidden>
+        <label for="custom-vram">Custom VRAM (GB) →</label>
+        <input id="custom-vram" type="number" min="1" step="1" value="${DEFAULT_CUSTOM_VRAM_GB}" />
+        <label for="custom-bandwidth">Custom bandwidth (GB/s) →</label>
+        <input
+          id="custom-bandwidth"
+          type="number"
+          min="1"
+          step="1"
+          value="${DEFAULT_CUSTOM_BANDWIDTH_GBS}"
+        />
       </div>
       <div class="field">
         <label for="ram">System RAM (GB) →</label>
@@ -85,8 +100,18 @@ function typeCommand(el, text) {
 
 const state = { backend: BACKENDS.LLAMA_CPP };
 
+function resolveGpu(root) {
+  const gpuId = root.querySelector("#gpu").value;
+  if (gpuId !== CUSTOM_GPU_ID) return getGpuById(gpuId);
+
+  const vramGb = Number(root.querySelector("#custom-vram").value) || DEFAULT_CUSTOM_VRAM_GB;
+  const bandwidthGBs =
+    Number(root.querySelector("#custom-bandwidth").value) || DEFAULT_CUSTOM_BANDWIDTH_GBS;
+  return { id: CUSTOM_GPU_ID, label: "Custom hardware", vramGb, bandwidthGBs };
+}
+
 function update(root) {
-  const gpu = getGpuById(root.querySelector("#gpu").value);
+  const gpu = resolveGpu(root);
   const model = getModelById(root.querySelector("#model").value);
   const quant = getQuantById(root.querySelector("#quant").value);
   const contextTokens = Number(root.querySelector("#ctx").value) || DEFAULT_CONTEXT_TOKENS;
@@ -148,6 +173,12 @@ function init() {
 
   root.querySelectorAll("select, input").forEach((el) => {
     el.addEventListener("change", () => update(root));
+  });
+
+  const gpuSelect = root.querySelector("#gpu");
+  const customFields = root.querySelector("#custom-fields");
+  gpuSelect.addEventListener("change", () => {
+    customFields.hidden = gpuSelect.value !== CUSTOM_GPU_ID;
   });
 
   const backendButtons = [

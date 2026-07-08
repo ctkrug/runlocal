@@ -77,6 +77,24 @@ describe("estimateModelSizeBytes / estimateKvCacheBytes — boundaries", () => {
   });
 });
 
+describe("solve — zero-VRAM boundary", () => {
+  it("offloads nothing to GPU and still estimates a finite positive CPU-only tok/s", () => {
+    const result = solve({
+      gpu: { id: "zero", label: "Zero VRAM", vramGb: 0, bandwidthGBs: 400 },
+      model: getModelById("llama-3-8b"),
+      quant: getQuantById("q4_k_m"),
+      contextTokens: 4096,
+      systemRamGb: 64,
+    });
+
+    expect(result.gpuLayers).toBe(0);
+    expect(result.cpuLayers).toBe(result.totalLayers);
+    expect(result.fitsFully).toBe(false);
+    expect(Number.isFinite(result.tokPerSec)).toBe(true);
+    expect(result.tokPerSec).toBeGreaterThan(0);
+  });
+});
+
 describe("solve — offload plans across quant/model combinations", () => {
   const contextTokens = 4096;
   const systemRamGb = 64;

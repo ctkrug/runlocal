@@ -86,7 +86,7 @@ a {
 
 @media (min-width: 768px) {
   .console {
-    grid-template-columns: 35% 1fr;
+    grid-template-columns: minmax(260px, 35%) 1fr;
   }
 }
 
@@ -145,6 +145,12 @@ input {
   font-size: 0.95rem;
   padding: var(--space-2) var(--space-3);
   transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+select {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 select:hover,

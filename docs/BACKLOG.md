@@ -47,15 +47,15 @@ criteria — no vibes. The first story of Epic 1 is the wow moment; nothing else
 
 ## Epic 3 — Data coverage & responsive UX
 
-- [ ] **Expand hardware database**
+- [x] **Expand hardware database**
   - At least 10 GPUs spanning NVIDIA consumer, NVIDIA datacenter, and Apple Silicon unified
     memory, each with sourced `vramGb` and `bandwidthGBs`.
-- [ ] **Expand model database**
+- [x] **Expand model database**
   - At least 8 models spanning Llama, Mistral, Qwen, and Phi families at commonly-run sizes.
-- [ ] **Custom hardware input**
+- [x] **Custom hardware input**
   - A "custom" hardware option accepts manually entered VRAM (GB) and bandwidth (GB/s) and feeds
     the same solver path as a preset GPU.
-- [ ] **Mobile-responsive layout**
+- [x] **Mobile-responsive layout**
   - No horizontal scroll and every control remains usable (tap targets ≥44px) at 390px, 768px,
     and 1440px viewport widths.
 

@@ -37,6 +37,16 @@ Vanilla JavaScript (ES modules), [Vite](https://vitejs.dev) for bundling, and
 that ships to `apps.charliekrug.com/runlocal`. No framework, no build magic: the offload solver
 and command builders are plain, testable functions.
 
+## Local development
+
+```sh
+npm install
+npm run dev      # start the dev server
+npm test         # run the vitest suite
+npm run lint     # eslint
+npm run build    # production build to dist/
+```
+
 ## Status
 
 Early scope/build phase — see [`docs/VISION.md`](docs/VISION.md) for the full plan and

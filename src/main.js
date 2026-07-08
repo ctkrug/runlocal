@@ -281,14 +281,25 @@ function init() {
     { el: root.querySelector("#backend-llamacpp"), backend: BACKENDS.LLAMA_CPP },
     { el: root.querySelector("#backend-ollama"), backend: BACKENDS.OLLAMA },
   ];
-  backendButtons.forEach(({ el, backend }) => {
-    el.addEventListener("click", () => {
-      state.backend = backend;
-      backendButtons.forEach(({ el: other, backend: otherBackend }) => {
-        other.classList.toggle("is-active", otherBackend === backend);
-        other.setAttribute("aria-checked", String(otherBackend === backend));
-      });
-      update(root);
+  function selectBackend(backend, { focus = false } = {}) {
+    state.backend = backend;
+    backendButtons.forEach(({ el: other, backend: otherBackend }) => {
+      const isSelected = otherBackend === backend;
+      other.classList.toggle("is-active", isSelected);
+      other.setAttribute("aria-checked", String(isSelected));
+      if (focus && isSelected) other.focus();
+    });
+    update(root);
+  }
+  backendButtons.forEach(({ el, backend }, index) => {
+    el.addEventListener("click", () => selectBackend(backend));
+    // ARIA radiogroup convention: arrow keys move selection between options.
+    el.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+      event.preventDefault();
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      const next = backendButtons[(index + direction + backendButtons.length) % backendButtons.length];
+      selectBackend(next.backend, { focus: true });
     });
   });
 

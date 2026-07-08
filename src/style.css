@@ -268,12 +268,27 @@ button.copy-failed {
 }
 
 .offload-bar {
+  position: relative;
   display: flex;
   height: 12px;
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--surface-2);
   margin: var(--space-2) 0;
+}
+
+.offload-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(12.5% - 1px),
+    rgba(11, 15, 20, 0.35) calc(12.5% - 1px),
+    rgba(11, 15, 20, 0.35) 12.5%
+  );
 }
 
 .offload-bar__gpu {

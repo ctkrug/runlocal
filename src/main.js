@@ -100,12 +100,25 @@ function render(root) {
 
 let typeRevealToken = 0;
 
+function prefersReducedMotion() {
+  return (
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
 function typeCommand(el, text) {
   const token = ++typeRevealToken;
   el.textContent = "";
   const cursor = document.createElement("span");
   cursor.className = "cursor";
   cursor.textContent = "▌";
+
+  if (prefersReducedMotion()) {
+    el.textContent = text;
+    el.appendChild(cursor);
+    return;
+  }
 
   let i = 0;
   function step() {

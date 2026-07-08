@@ -3,6 +3,7 @@ import { MODELS, getModelById } from "./data/models.js";
 import { QUANTS, getQuantById } from "./data/quant.js";
 import { solve, BANDWIDTH_EFFICIENCY } from "./core/solver.js";
 import { buildLlamaCppCommand, buildOllamaCommand } from "./core/command.js";
+import { parseClampedNumber } from "./core/parse.js";
 
 const BACKENDS = { LLAMA_CPP: "llama.cpp", OLLAMA: "ollama" };
 const CUSTOM_GPU_ID = "custom";
@@ -113,14 +114,8 @@ function typeCommand(el, text) {
 
 const state = { backend: BACKENDS.LLAMA_CPP };
 
-// Number(el.value) is falsy for "", "0", and non-numeric text — fall back to a sane default
-// in that case, but clamp otherwise-truthy negative input (e.g. "-500") to `min` rather than
-// letting it flow into the memory math as a negative KV cache / VRAM figure.
-function readNumber(el, fallback, min, { round = false } = {}) {
-  const raw = Number(el.value);
-  if (!raw) return fallback;
-  const clamped = Math.max(min, raw);
-  return round ? Math.round(clamped) : clamped;
+function readNumber(el, fallback, min, opts = {}) {
+  return parseClampedNumber(el.value, { fallback, min, ...opts });
 }
 
 function resolveGpu(root) {

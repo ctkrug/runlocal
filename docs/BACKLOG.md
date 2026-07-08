@@ -30,18 +30,18 @@ criteria — no vibes. The first story of Epic 1 is the wow moment; nothing else
 
 ## Epic 2 — Launch command generation
 
-- [ ] **llama.cpp command builder**
+- [x] **llama.cpp command builder**
   - Generated command includes `--n-gpu-layers`, `--ctx-size`, and a model file reference.
   - Command has no syntax errors when dry-parsed as a shell command line (no unescaped quotes,
     no unclosed line continuations).
-- [ ] **Ollama command equivalent**
+- [x] **Ollama command equivalent**
   - A backend toggle switches between `llama.cpp` and `Ollama` command syntax while preserving
     the same solved `gpuLayers`/context values.
-- [ ] **Copy-to-clipboard with confirmation**
+- [x] **Copy-to-clipboard with confirmation**
   - Clicking the copy button copies the exact command text (verified via `navigator.clipboard`
     write call receiving the same string shown on screen).
   - The button shows a "Copied" state for ~2 seconds before reverting.
-- [ ] **Warning state for won't-fit combinations**
+- [x] **Warning state for won't-fit combinations**
   - Selecting a model whose weights + KV cache exceed VRAM **and** system RAM combined shows a
     visible red warning instead of a misleadingly "valid" command.
 

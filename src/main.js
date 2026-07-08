@@ -106,7 +106,7 @@ function render(root) {
       <button id="copy" type="button">Copy command</button>
       <div class="warning" id="warning" role="alert" hidden></div>
       <div class="offload-bar" id="offload-bar" aria-hidden="true"></div>
-      <div class="readout" id="readout"></div>
+      <div class="readout" id="readout" role="status"></div>
       <p class="disclaimer">
         tok/s is a bandwidth-bound estimate, not a benchmark —
         <a href="#methodology" id="disclaimer-link">see the methodology</a>.

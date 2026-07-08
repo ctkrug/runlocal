@@ -17,8 +17,12 @@
     "test": "vitest run",
     "lint": "eslint src test"
   },
-  "devDependencies": {},
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4",
+    "vite": "^6.4.3",
+    "vitest": "^3.2.7"
   }
 }

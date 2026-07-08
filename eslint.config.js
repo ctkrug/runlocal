@@ -10,6 +10,7 @@ export default [
         localStorage: "readonly",
         navigator: "readonly",
         console: "readonly",
+        setTimeout: "readonly",
       },
     },
     rules: {

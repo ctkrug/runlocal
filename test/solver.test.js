@@ -62,3 +62,33 @@ describe("solve", () => {
     expect(long.kvCacheGb).toBeGreaterThan(short.kvCacheGb);
   });
 });
+
+describe("solve — offload plans across quant/model combinations", () => {
+  const contextTokens = 4096;
+  const systemRamGb = 64;
+
+  const cases = [
+    { gpuId: "rtx-4090-24gb", modelId: "llama-3-8b", quantId: "q4_k_m", expectedGpuLayers: 32 },
+    { gpuId: "rtx-4090-24gb", modelId: "qwen2.5-14b", quantId: "f16", expectedGpuLayers: 31 },
+    { gpuId: "rtx-3060-12gb", modelId: "mistral-7b", quantId: "q5_k_m", expectedGpuLayers: 32 },
+    { gpuId: "rtx-3060-12gb", modelId: "llama-3-70b", quantId: "q4_k_m", expectedGpuLayers: 1 },
+    { gpuId: "rtx-4060-ti-16gb", modelId: "phi-3-medium", quantId: "q8_0", expectedGpuLayers: 34 },
+  ];
+
+  it.each(cases)(
+    "solves $modelId @ $quantId on $gpuId to $expectedGpuLayers gpu layers",
+    ({ gpuId, modelId, quantId, expectedGpuLayers }) => {
+      const result = solve({
+        gpu: getGpuById(gpuId),
+        model: getModelById(modelId),
+        quant: getQuantById(quantId),
+        contextTokens,
+        systemRamGb,
+      });
+
+      expect(result.gpuLayers).toBe(expectedGpuLayers);
+      expect(Number.isFinite(result.tokPerSec)).toBe(true);
+      expect(result.tokPerSec).toBeGreaterThan(0);
+    }
+  );
+});

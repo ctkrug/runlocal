@@ -116,10 +116,11 @@ const state = { backend: BACKENDS.LLAMA_CPP };
 // Number(el.value) is falsy for "", "0", and non-numeric text — fall back to a sane default
 // in that case, but clamp otherwise-truthy negative input (e.g. "-500") to `min` rather than
 // letting it flow into the memory math as a negative KV cache / VRAM figure.
-function readNumber(el, fallback, min) {
+function readNumber(el, fallback, min, { round = false } = {}) {
   const raw = Number(el.value);
   if (!raw) return fallback;
-  return Math.max(min, raw);
+  const clamped = Math.max(min, raw);
+  return round ? Math.round(clamped) : clamped;
 }
 
 function resolveGpu(root) {
@@ -139,7 +140,9 @@ function update(root) {
   const gpu = resolveGpu(root);
   const model = getModelById(root.querySelector("#model").value);
   const quant = getQuantById(root.querySelector("#quant").value);
-  const contextTokens = readNumber(root.querySelector("#ctx"), DEFAULT_CONTEXT_TOKENS, 0);
+  const contextTokens = readNumber(root.querySelector("#ctx"), DEFAULT_CONTEXT_TOKENS, 0, {
+    round: true,
+  });
   const systemRamGb = readNumber(root.querySelector("#ram"), 0, 0);
 
   const result = solve({ gpu, model, quant, contextTokens, systemRamGb });

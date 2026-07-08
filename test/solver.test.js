@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { solve } from "../src/core/solver.js";
+import { solve, estimateModelSizeBytes, estimateKvCacheBytes } from "../src/core/solver.js";
 import { getGpuById } from "../src/data/hardware.js";
 import { getModelById } from "../src/data/models.js";
 import { getQuantById } from "../src/data/quant.js";

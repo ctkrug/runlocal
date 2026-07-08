@@ -9,7 +9,8 @@ const CPU_RAM_BANDWIDTH_GBS = 25; // typical dual-channel DDR4/DDR5 bandwidth
 // Fraction of theoretical memory bandwidth real decode throughput achieves.
 // Calibrated so RTX 3060 12GB + Llama-3-8B (Q4_K_M) lands near ~38 tok/s,
 // a commonly reported real-world figure. Refined in docs/BACKLOG.md.
-const BANDWIDTH_EFFICIENCY = 0.46;
+// Exported so the UI's "why this estimate" panel can display it verbatim.
+export const BANDWIDTH_EFFICIENCY = 0.46;
 
 export function estimateModelSizeBytes(model, quant) {
   return model.paramsBillion * BYTES_PER_GB * quant.bytesPerParam;

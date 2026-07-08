@@ -18,6 +18,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:site": "vite build --outDir site --emptyOutDir",
     "preview": "vite preview",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",

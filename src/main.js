@@ -12,6 +12,7 @@ const DEFAULT_SYSTEM_RAM_GB = 32;
 const DEFAULT_CUSTOM_VRAM_GB = 12;
 const DEFAULT_CUSTOM_BANDWIDTH_GBS = 400;
 const TYPE_REVEAL_MS = 24;
+const LIVE_INPUT_DEBOUNCE_MS = 200;
 
 function optionsHtml(items) {
   return items.map((item) => `<option value="${item.id}">${item.label}</option>`).join("");
@@ -202,6 +203,14 @@ function init() {
 
   root.querySelectorAll("select, input").forEach((el) => {
     el.addEventListener("change", () => update(root));
+  });
+
+  let liveUpdateTimer = null;
+  root.querySelectorAll("input").forEach((el) => {
+    el.addEventListener("input", () => {
+      clearTimeout(liveUpdateTimer);
+      liveUpdateTimer = setTimeout(() => update(root), LIVE_INPUT_DEBOUNCE_MS);
+    });
   });
 
   const gpuSelect = root.querySelector("#gpu");

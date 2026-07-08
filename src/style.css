@@ -256,6 +256,11 @@ button.copied {
   color: var(--success);
 }
 
+button.copy-failed {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
 .offload-bar {
   display: flex;
   height: 12px;

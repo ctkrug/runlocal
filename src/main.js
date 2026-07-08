@@ -88,7 +88,10 @@ function render(root) {
   `;
 }
 
+let typeRevealToken = 0;
+
 function typeCommand(el, text) {
+  const token = ++typeRevealToken;
   el.textContent = "";
   const cursor = document.createElement("span");
   cursor.className = "cursor";
@@ -96,6 +99,7 @@ function typeCommand(el, text) {
 
   let i = 0;
   function step() {
+    if (token !== typeRevealToken) return;
     el.textContent = text.slice(0, i);
     el.appendChild(cursor);
     if (i < text.length) {

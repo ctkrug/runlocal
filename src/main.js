@@ -1,7 +1,7 @@
 import { GPUS, getGpuById } from "./data/hardware.js";
 import { MODELS, getModelById } from "./data/models.js";
 import { QUANTS, getQuantById } from "./data/quant.js";
-import { solve } from "./core/solver.js";
+import { solve, BANDWIDTH_EFFICIENCY } from "./core/solver.js";
 import { buildLlamaCppCommand, buildOllamaCommand } from "./core/command.js";
 
 const BACKENDS = { LLAMA_CPP: "llama.cpp", OLLAMA: "ollama" };
@@ -75,6 +75,14 @@ function render(root) {
       <div class="warning" id="warning" role="alert" hidden></div>
       <div class="offload-bar" id="offload-bar" aria-hidden="true"></div>
       <div class="readout" id="readout"></div>
+      <p class="disclaimer">
+        tok/s is a bandwidth-bound estimate, not a benchmark —
+        <a href="#methodology" id="disclaimer-link">see the methodology</a>.
+      </p>
+      <details class="methodology" id="methodology">
+        <summary>Why this estimate?</summary>
+        <div id="methodology-body"></div>
+      </details>
       <div class="spec-plate">RUNLOCAL⌐¬</div>
     </section>
   `;
@@ -165,6 +173,23 @@ function update(root) {
       <div class="label">Model size (${quant.label})</div>
     </div>
   `;
+
+  root.querySelector("#methodology-body").innerHTML = `
+    <dl>
+      <dt>Model size</dt>
+      <dd>${model.paramsBillion}B params × ${quant.bytesPerParam} bytes/param =
+        ${result.modelSizeGb.toFixed(2)} GB</dd>
+      <dt>KV cache</dt>
+      <dd>2 × ${model.layers} layers × ${model.hiddenSize} hidden × ${contextTokens} ctx × 2
+        bytes = ${result.kvCacheGb.toFixed(2)} GB</dd>
+      <dt>GPU-offloaded layers</dt>
+      <dd>floor((${gpu.vramGb} GB VRAM − ${result.kvCacheGb.toFixed(2)} GB KV cache − 0.5 GB
+        overhead) ÷ bytes-per-layer) = ${result.gpuLayers} of ${result.totalLayers}</dd>
+      <dt>Tokens/sec</dt>
+      <dd>1 ÷ (bytes moved per token ÷ (${gpu.bandwidthGBs} GB/s ×
+        ${BANDWIDTH_EFFICIENCY} efficiency)) = ${result.tokPerSec.toFixed(1)} tok/s</dd>
+    </dl>
+  `;
 }
 
 function init() {
@@ -194,6 +219,10 @@ function init() {
       });
       update(root);
     });
+  });
+
+  root.querySelector("#disclaimer-link").addEventListener("click", () => {
+    root.querySelector("#methodology").open = true;
   });
 
   root.querySelector("#copy").addEventListener("click", () => {

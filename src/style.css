@@ -292,6 +292,53 @@ button.copied {
   letter-spacing: 0.08em;
 }
 
+.disclaimer {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin: var(--space-3) 0 0;
+}
+
+.disclaimer a {
+  color: var(--accent);
+}
+
+.methodology {
+  margin-top: var(--space-2);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+}
+
+.methodology summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.8rem;
+  padding: var(--space-1) 0;
+}
+
+.methodology summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.methodology dl {
+  margin: var(--space-2) 0 0;
+  font-size: 0.8rem;
+}
+
+.methodology dt {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  margin-top: var(--space-2);
+}
+
+.methodology dd {
+  margin: var(--space-1) 0 0;
+  color: var(--text);
+}
+
 .spec-plate {
   position: absolute;
   bottom: var(--space-2);
